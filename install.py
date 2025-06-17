@@ -19,6 +19,11 @@ def enable_repos():
     nonfree_url = f"https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{version}.noarch.rpm"
 
     run(["dnf", "install", "-y", free_url, nonfree_url])
+
+    # Instala Flatpak se necessário
+    run(["dnf", "install", "-y", "flatpak"])
+
+    # Adiciona o repositório Flathub
     run(["flatpak", "remote-add", "--if-not-exists", "flathub", "https://flathub.org/repo/flathub.flatpakrepo"])
 
 def install_rpm_packages():
