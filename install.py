@@ -39,7 +39,7 @@ def install_rpm_packages():
 
         # Multimídia
         "gstreamer1-plugins-base", "gstreamer1-plugins-good", "gstreamer1-plugins-bad-free",
-        "gstreamer1-plugins-bad-free-extras", "gstreamer1-libav", "ffmpeg-free", "ffmpeg",
+        "gstreamer1-plugins-bad-free-extras", "gstreamer1-libav", "ffmpeg",
 
         # Comunicação
         "telegram-desktop",
