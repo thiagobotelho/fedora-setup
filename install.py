@@ -7,40 +7,40 @@ def run(cmd, sudo=True):
     print(f"\n🔧 Executando: {' '.join(cmd)}")
     subprocess.run(cmd, check=True)
 
+def get_fedora_version():
+    return subprocess.check_output(["rpm", "-E", "%fedora"]).decode().strip()
+
 def update_system():
     run(["dnf", "upgrade", "--refresh", "-y"])
 
 def enable_repos():
-    run(["dnf", "install", "-y",
-         "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm",
-         "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm"], sudo=True)
-    run(["flatpak", "remote-add", "--if-not-exists", "flathub", "https://flathub.org/repo/flathub.flatpakrepo"], sudo=True)
+    version = get_fedora_version()
+    free_url = f"https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-{version}.noarch.rpm"
+    nonfree_url = f"https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{version}.noarch.rpm"
+
+    run(["dnf", "install", "-y", free_url, nonfree_url])
+    run(["flatpak", "remote-add", "--if-not-exists", "flathub", "https://flathub.org/repo/flathub.flatpakrepo"])
 
 def install_rpm_packages():
     pacotes = [
-        # Terminal & Utilitários
         "zsh", "tmux", "git", "curl", "wget", "neovim", "vim-enhanced", "htop",
         "python3-pip", "ansible", "podman", "bat", "btop", "fd-find",
 
         # GNOME e interface
         "gnome-tweaks", "gnome-browser-connector", "gnome-extensions-app",
 
-        # Navegadores
+        # Navegadores e utilitários
         "chromium", "qbittorrent", "vlc", "flameshot",
 
-        # Codecs e multimídia
+        # Multimídia
         "gstreamer1-plugins-base", "gstreamer1-plugins-good", "gstreamer1-plugins-bad-free",
-        "gstreamer1-plugins-bad-free-extras", "gstreamer1-libav",
-        "ffmpeg-free", "ffmpeg",
+        "gstreamer1-plugins-bad-free-extras", "gstreamer1-libav", "ffmpeg-free", "ffmpeg",
 
-        # Streaming & comunicação
-        "obs-studio", "telegram-desktop",
+        # Comunicação
+        "telegram-desktop",
 
-        # Java
-        "java-latest-openjdk",
-
-        # Virtualização e sistema
-        "virt-manager", "gparted"
+        # Streaming, Java e virtualização
+        "obs-studio", "java-latest-openjdk", "virt-manager", "gparted"
     ]
     run(["dnf", "install", "-y", "--allowerasing"] + pacotes)
 
