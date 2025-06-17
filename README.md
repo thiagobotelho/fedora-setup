@@ -37,7 +37,7 @@ Script de automação para configurar um ambiente completo no Fedora 41/42. Idea
 ## 📦 Como usar
 
 ```bash
-git clone https://github.com/seu-usuario/fedora-setup.git
+git clone https://github.com/thiagobotelho/fedora-setup.git
 cd fedora-setup
 chmod +x install.py
 ./install.py
