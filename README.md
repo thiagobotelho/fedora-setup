@@ -1,4 +1,4 @@
-# fedora-bootstrap
+# fedora-setup
 
 Script de automação para configurar rapidamente um ambiente completo no **Fedora 41/42** após formatação. Ideal para desenvolvedores, sysadmins e profissionais DevOps que desejam otimizar tempo com instalação de ferramentas essenciais.
 
@@ -16,7 +16,7 @@ Script de automação para configurar rapidamente um ambiente completo no **Fedo
 > Pré-requisitos: Fedora 41 ou 42, usuário com permissão `sudo`.
 
 ```bash
-git clone https://github.com/seu-usuario/fedora-bootstrap.git
-cd fedora-bootstrap
+git clone https://github.com/seu-usuario/fedora-setup.git
+cd fedora-setup
 chmod +x install.py
 ./install.py
