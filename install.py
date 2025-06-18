@@ -19,40 +19,58 @@ def enable_repos():
     nonfree_url = f"https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{version}.noarch.rpm"
 
     run(["dnf", "install", "-y", free_url, nonfree_url])
-
-    # Instala Flatpak se necessário
     run(["dnf", "install", "-y", "flatpak"])
-
-    # Adiciona o repositório Flathub
     run(["flatpak", "remote-add", "--if-not-exists", "flathub", "https://flathub.org/repo/flathub.flatpakrepo"])
 
 def install_rpm_packages():
-    pacotes = [
-        "zsh", "tmux", "git", "curl", "wget", "neovim", "vim-enhanced", "htop",
-        "python3-pip", "ansible", "podman", "bat", "btop", "fd-find",
+    try:
+        run(["dnf", "remove", "-y", "ffmpeg-free"])
+    except subprocess.CalledProcessError:
+        print("ℹ️ ffmpeg-free não encontrado. Continuando...")
 
-        # GNOME e interface
+    pacotes = [
+
+        # 🧰 Ferramentas de terminal e utilitários
+        "zsh", "tmux", "git", "curl", "wget",
+        "neovim", "vim-enhanced", "htop",
+        "bat", "btop", "fd-find",
+
+        # 🐍 Desenvolvimento e automação
+        "python3-pip", "ansible", "podman",
+
+        # 🖼️ GNOME e interface gráfica
         "gnome-tweaks", "gnome-browser-connector", "gnome-extensions-app",
 
-        # Navegadores e utilitários
-        "chromium", "qbittorrent", "vlc", "flameshot",
+        # 🌐 Navegadores e produtividade
+        "chromium", "qbittorrent", "flameshot", "vlc",
 
-        # Multimídia
-        "gstreamer1-plugins-base", "gstreamer1-plugins-good", "gstreamer1-plugins-bad-free",
-        "gstreamer1-plugins-bad-free-extras", "gstreamer1-libav", "ffmpeg",
+        # 🎞️ Multimídia e codecs
+        "gstreamer1-plugins-base", "gstreamer1-plugins-good",
+        "gstreamer1-plugins-bad-free", "gstreamer1-plugins-bad-free-extras",
+        "gstreamer1-libav", "ffmpeg",
 
-        # Comunicação
+        # 💬 Comunicação
         "telegram-desktop",
 
-        # Streaming, Java e virtualização
-        "obs-studio", "java-latest-openjdk", "virt-manager", "gparted"
+        # 📽️ Streaming, Java e virtualização
+        "obs-studio", "java-latest-openjdk", "virt-manager",
+
+        # 🛠️ Ferramentas de sistema
+        "gparted"
     ]
+
     run(["dnf", "install", "-y", "--allowerasing"] + pacotes)
 
 def install_vscode():
     run(["rpm", "--import", "https://packages.microsoft.com/keys/microsoft.asc"])
     run(["sh", "-c", 'echo -e "[code]\\nname=Visual Studio Code\\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\\nenabled=1\\ngpgcheck=1\\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'])
-    run(["dnf", "check-update"])
+
+    try:
+        run(["dnf", "check-update"])
+    except subprocess.CalledProcessError as e:
+        if e.returncode != 100:
+            raise
+
     run(["dnf", "install", "-y", "code"])
 
 def install_brave():
