@@ -23,11 +23,6 @@ def enable_repos():
     run(["flatpak", "remote-add", "--if-not-exists", "flathub", "https://flathub.org/repo/flathub.flatpakrepo"])
 
 def install_rpm_packages():
-    try:
-        run(["dnf", "remove", "-y", "ffmpeg-free"])
-    except subprocess.CalledProcessError:
-        print("ℹ️ ffmpeg-free não encontrado. Continuando...")
-
     pacotes = [
 
         # 🧰 Ferramentas de terminal e utilitários
@@ -70,18 +65,23 @@ def install_vscode():
     except subprocess.CalledProcessError as e:
         if e.returncode != 100:
             raise
-
+    
     run(["dnf", "install", "-y", "code"])
 
 def install_brave():
-    run(["dnf", "install", "-y", "dnf-plugins-core"])
-    run(["dnf", "config-manager", "--add-repo", "https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo"])
     run(["rpm", "--import", "https://brave-browser-rpm-release.s3.brave.com/brave-core.asc"])
+    repo_content = b"""[brave-browser]
+name=Brave Browser
+baseurl=https://brave-browser-rpm-release.s3.brave.com/x86_64/
+enabled=1
+gpgcheck=1
+gpgkey=https://brave-browser-rpm-release.s3.brave.com/brave-core.asc
+"""
+    run(["tee", "/etc/yum.repos.d/brave-browser.repo"], input=repo_content)
     run(["dnf", "install", "-y", "brave-browser"])
 
 def install_opera():
-    run(["dnf", "config-manager", "--add-repo", "https://rpm.opera.com/rpm"])
-    run(["dnf", "install", "-y", "opera-stable"])
+    run(["dnf", "install", "-y", "https://rpm.opera.com/rpm/opera-stable_latest_amd64.rpm"])
 
 def install_flatpak_apps():
     flatpaks = [
