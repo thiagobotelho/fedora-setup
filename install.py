@@ -74,8 +74,9 @@ def install_vscode():
     run(["dnf", "install", "-y", "code"])
 
 def install_brave():
-    run(["rpm", "--import", "https://brave.com/signing-key.asc"])
-    run(["sh", "-c", 'echo -e "[brave-browser]\\nname=Brave Browser\\nbaseurl=https://brave-browser-rpm-release.s3.brave.com/\\nenabled=1\\ngpgcheck=1\\ngpgkey=https://brave.com/signing-key.asc" > /etc/yum.repos.d/brave-browser.repo'])
+    run(["dnf", "install", "-y", "dnf-plugins-core"])
+    run(["dnf", "config-manager", "--add-repo", "https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo"])
+    run(["rpm", "--import", "https://brave-browser-rpm-release.s3.brave.com/brave-core.asc"])
     run(["dnf", "install", "-y", "brave-browser"])
 
 def install_opera():
