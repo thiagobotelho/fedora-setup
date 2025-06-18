@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 import subprocess
 
-def run(cmd, sudo=True):
+def run(cmd, sudo=True, input=None):
     if sudo:
         cmd.insert(0, "sudo")
     print(f"\n🔧 Executando: {' '.join(cmd)}")
-    subprocess.run(cmd, check=True)
+    subprocess.run(cmd, check=True, input=input)
 
 def get_fedora_version():
     return subprocess.check_output(["rpm", "-E", "%fedora"]).decode().strip()
@@ -65,7 +65,7 @@ def install_vscode():
     except subprocess.CalledProcessError as e:
         if e.returncode != 100:
             raise
-    
+
     run(["dnf", "install", "-y", "code"])
 
 def install_brave():
