@@ -1,40 +1,59 @@
 # fedora-setup
 
-Script de automação para configurar um ambiente completo no Fedora 41/42. Ideal para desenvolvedores, profissionais DevOps e usuários que desejam economizar tempo após formatação.
+Script de automação para configurar rapidamente um ambiente completo no Fedora 41 ou 42. Ideal para desenvolvedores, profissionais de DevOps, SREs e usuários que desejam produtividade imediata após a formatação.
 
-## 🚀 O que este script faz?
+---
 
-- Ativa os repositórios RPM Fusion (Free & Non-Free)
-- Adiciona Flathub como fonte Flatpak
-- Instala navegadores, IDEs, utilitários, codecs, e ferramentas de desenvolvimento
-- Tudo automatizado via Python com `dnf` e `flatpak`
+## 🚀 Funcionalidades
+
+- Ativa repositórios RPM Fusion (Free e Non-Free)
+- Adiciona o repositório Flathub
+- Instala navegadores, IDEs, ferramentas de terminal, codecs e utilitários
+- Configura repositórios de terceiros (Brave, VS Code, HashiCorp)
+- Suporte completo para ambiente gráfico com GNOME Tweaks e extensões
+- Automatização via script Python com `dnf` e `flatpak`
 
 ---
 
 ## 🧰 Softwares instalados
 
-### 🖥️ Interface e utilitários
+### 🖥️ Interface e utilitários gráficos
 - GNOME Tweaks, Extension Manager, Browser Connector
-- Flameshot, GParted, Vim (completo), Terminal Tools (tmux, btop, fd)
+- Flameshot, GParted, Vim (completo), terminal tools (tmux, btop, fd, glances)
 
 ### 🌐 Navegadores
-- Brave, Opera, Chromium
+- Brave (repositório oficial)
+- Chromium
+- Opera (via Flatpak — opcional)
 
 ### 🧠 Desenvolvimento
-- VS Code (RPM), PyCharm Community (Flatpak), Ansible, Podman, Java OpenJDK
+- VS Code (RPM oficial)
+- PyCharm Community (Flatpak)
+- Ansible, Podman, Maven
+- Python 3 + Pip
+
+### 🔐 Segurança e rede
+- ClamAV, ClamTK, RKHunter
+- Nmap, Wireshark
 
 ### 🎥 Multimídia
-- VLC, qBittorrent, OBS Studio, Codecs GStreamer, FFmpeg
+- VLC, qBittorrent, OBS Studio
+- Codecs GStreamer e FFmpeg
 
-### 📨 Comunicação
-- Postman, Telegram Desktop, Notepad++
+### 💬 Comunicação
+- Telegram Desktop
+- Postman (Flatpak)
+- Notepad++ (NotepadNext via Flatpak)
 
-### ☁️ Virtualização
+### ☁️ Virtualização e infraestrutura
 - Virtual Machine Manager (`virt-manager`)
+- Ferramentas HashiCorp: Terraform, Packer, Vault
 
 ---
 
 ## 📦 Como usar
+
+Clone o repositório e execute o instalador:
 
 ```bash
 git clone https://github.com/thiagobotelho/fedora-setup.git
