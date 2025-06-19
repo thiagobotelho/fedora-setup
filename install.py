@@ -15,57 +15,55 @@ def update_system():
 
 def enable_repos():
     version = get_fedora_version()
-    free_url = f"https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-{version}.noarch.rpm"
-    nonfree_url = f"https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{version}.noarch.rpm"
-
-    run(["dnf", "install", "-y", free_url, nonfree_url])
+    run(["dnf", "install", "-y", f"https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-{version}.noarch.rpm"])
+    run(["dnf", "install", "-y", f"https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{version}.noarch.rpm"])
     run(["dnf", "install", "-y", "flatpak"])
     run(["flatpak", "remote-add", "--if-not-exists", "flathub", "https://flathub.org/repo/flathub.flatpakrepo"])
 
 def install_rpm_packages():
     pacotes = [
+        # 🧰 Terminal e utilitários
+        "zsh", "tmux", "git", "curl", "wget", "neovim", "vim-enhanced", "htop",
+        "bat", "btop", "fd-find", "alacritty", "glances",
 
-        # 🧰 Ferramentas de terminal e utilitários
-        "zsh", "tmux", "git", "curl", "wget",
-        "neovim", "vim-enhanced", "htop",
-        "bat", "btop", "fd-find",
+        # 🐍 DevOps / Desenvolvimento
+        "python3-pip", "ansible", "podman", "terraform", "packer", "vault", "maven",
 
-        # 🐍 Desenvolvimento e automação
-        "python3-pip", "ansible", "podman",
+        # ☕ Java
+        "java-17-openjdk", "java-21-openjdk",
 
-        # 🖼️ GNOME e interface gráfica
-        "gnome-tweaks", "gnome-browser-connector", "gnome-extensions-app",
+        # 🛡️ Segurança
+        "clamav", "clamtk", "rkhunter", "nmap", "wireshark",
 
-        # 🌐 Navegadores e produtividade
-        "chromium", "qbittorrent", "flameshot", "vlc",
+        # 🎨 Interface e temas
+        "gnome-tweaks", "papirus-icon-theme", "catppuccin-gtk-theme", "gnome-browser-connector", "gnome-extensions-app",
 
-        # 🎞️ Multimídia e codecs
-        "gstreamer1-plugins-base", "gstreamer1-plugins-good",
-        "gstreamer1-plugins-bad-free", "gstreamer1-plugins-bad-free-extras",
-        "gstreamer1-libav", "ffmpeg",
+        # 🌐 Navegadores e ferramentas gráficas
+        "chromium", "qbittorrent", "vlc", "flameshot", "obs-studio", "gparted",
 
         # 💬 Comunicação
         "telegram-desktop",
 
-        # 📽️ Streaming, Java e virtualização
-        "obs-studio", "java-latest-openjdk", "virt-manager",
-
-        # 🛠️ Ferramentas de sistema
-        "gparted"
+        # 🧰 Virtualização
+        "virt-manager"
     ]
-
     run(["dnf", "install", "-y", "--allowerasing"] + pacotes)
 
 def install_vscode():
     run(["rpm", "--import", "https://packages.microsoft.com/keys/microsoft.asc"])
-    run(["sh", "-c", 'echo -e "[code]\\nname=Visual Studio Code\\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\\nenabled=1\\ngpgcheck=1\\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'])
-
+    repo_content = b"""[code]
+name=Visual Studio Code
+baseurl=https://packages.microsoft.com/yumrepos/vscode
+enabled=1
+gpgcheck=1
+gpgkey=https://packages.microsoft.com/keys/microsoft.asc
+"""
+    run(["tee", "/etc/yum.repos.d/vscode.repo"], input=repo_content)
     try:
         run(["dnf", "check-update"])
     except subprocess.CalledProcessError as e:
         if e.returncode != 100:
             raise
-
     run(["dnf", "install", "-y", "code"])
 
 def install_brave():
@@ -80,13 +78,10 @@ gpgkey=https://brave-browser-rpm-release.s3.brave.com/brave-core.asc
     run(["tee", "/etc/yum.repos.d/brave-browser.repo"], input=repo_content)
     run(["dnf", "install", "-y", "brave-browser"])
 
-def install_opera():
-    run(["dnf", "install", "-y", "https://rpm.opera.com/rpm/opera-stable_latest_amd64.rpm"])
-
 def install_flatpak_apps():
     flatpaks = [
         "com.getpostman.Postman",
-        "org.notepad_plus_plus.NotepadPlusPlus",
+        "com.github.dail8859.NotepadNext",
         "com.jetbrains.PyCharm-Community"
     ]
     for app in flatpaks:
@@ -98,9 +93,8 @@ def main():
     install_rpm_packages()
     install_vscode()
     install_brave()
-    install_opera()
     install_flatpak_apps()
-    print("\n✅ Fedora configurado com sucesso com todas as ferramentas essenciais!")
+    print("\n✅ Fedora configurado com sucesso com ferramentas para terminal, DevOps, segurança e interface gráfica!")
 
 if __name__ == "__main__":
     main()
