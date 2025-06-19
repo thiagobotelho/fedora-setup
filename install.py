@@ -36,7 +36,7 @@ def install_rpm_packages():
         "clamav", "clamtk", "rkhunter", "nmap", "wireshark",
 
         # 🎨 Interface e Temas
-        gnome-tweaks", "gnome-browser-connector", "gnome-extensions-app",
+        "gnome-tweaks", "gnome-browser-connector", "gnome-extensions-app",
 
         # 🌐 Navegadores e ferramentas gráficas
         "chromium", "qbittorrent", "vlc", "flameshot", "obs-studio", "gparted",
