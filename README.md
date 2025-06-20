@@ -58,4 +58,4 @@ Clone o repositório e execute o instalador:
 git clone https://github.com/thiagobotelho/fedora-setup.git
 cd fedora-setup
 chmod +x install.py
-./install.py
+sudo ./install.py
