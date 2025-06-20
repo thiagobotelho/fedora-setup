@@ -23,14 +23,14 @@ def enable_repos():
 def install_rpm_packages():
     pacotes = [
         # 🧰 Terminal e utilitários
-        "zsh", "tmux", "git", "curl", "wget", "neovim", "vim-enhanced", "htop",
+        "zsh", "tmux", "git", "curl", "wget", "neovim", "vim-enhanced",
         "bat", "btop", "fd-find", "alacritty", "glances",
 
         # 🐍 DevOps / Desenvolvimento
         "python3-pip", "ansible", "podman", "maven",
 
         # ☕ Java
-        "java-17-openjdk", "java-21-openjdk",
+        "java-21-openjdk",
 
         # 🛡️ Segurança
         "clamav", "clamtk", "rkhunter", "nmap", "wireshark",
@@ -52,23 +52,6 @@ def install_rpm_packages():
 def install_vscode():
     run(["rpm", "--import", "https://packages.microsoft.com/keys/microsoft.asc"])
     repo_content = b"""[code]
-name=Visual Studio Code
-baseurl=https://packages.microsoft.com/yumrepos/vscode
-enabled=1
-gpgcheck=1
-gpgkey=https://packages.microsoft.com/keys/microsoft.asc
-"""
-    run(["tee", "/etc/yum.repos.d/vscode.repo"], input=repo_content)
-    try:
-        run(["dnf", "check-update"])
-    except subprocess.CalledProcessError as e:
-        if e.returncode != 100:
-            raise
-    run(["dnf", "install", "-y", "code"])
-
-def install_vscode():
-    run(["rpm", "--import", "https://packages.microsoft.com/keys/microsoft.asc"])
-    repo_content = """[code]
 name=Visual Studio Code
 baseurl=https://packages.microsoft.com/yumrepos/vscode
 enabled=1
