@@ -24,7 +24,6 @@ Script de automação para configurar rapidamente um ambiente completo no Fedora
 ### 🌐 Navegadores
 - Brave (repositório oficial)
 - Chromium
-- Opera (via Flatpak — opcional)
 
 ### 🧠 Desenvolvimento
 - VS Code (RPM oficial)
