@@ -45,7 +45,7 @@ def install_rpm_packages():
         "telegram-desktop",
 
         # 🧰 Virtualização
-        "virt-manager"
+        "virt-manager", "VirtualBox"
     ]
     run(["dnf", "install", "-y", "--allowerasing"] + pacotes)
 
