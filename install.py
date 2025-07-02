@@ -51,7 +51,8 @@ def install_rpm_packages():
 
 def install_vscode():
     run(["rpm", "--import", "https://packages.microsoft.com/keys/microsoft.asc"])
-    repo_content = b"""[code]
+    
+    repo_content = """[code]
 name=Visual Studio Code
 baseurl=https://packages.microsoft.com/yumrepos/vscode
 enabled=1
@@ -59,11 +60,13 @@ gpgcheck=1
 gpgkey=https://packages.microsoft.com/keys/microsoft.asc
 """
     run(["tee", "/etc/yum.repos.d/vscode.repo"], input=repo_content)
+    
     try:
         run(["dnf", "check-update"])
     except subprocess.CalledProcessError as e:
         if e.returncode != 100:
             raise
+    
     run(["dnf", "install", "-y", "code"])
 
 def install_brave():
