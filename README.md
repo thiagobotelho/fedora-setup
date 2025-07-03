@@ -47,6 +47,7 @@ Script de automação para configurar rapidamente um ambiente completo no Fedora
 ### ☁️ Virtualização e infraestrutura
 - Virtual Machine Manager (`virt-manager`)
 - VirtualBox
+- Vagrant
 - Ferramentas HashiCorp: Terraform, Packer, Vault
 
 ---
