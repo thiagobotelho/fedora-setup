@@ -13,13 +13,35 @@ def get_fedora_version():
 def update_system():
     run(["dnf", "upgrade", "--refresh", "-y"])
 
+def is_repo_enabled(repo_id):
+    result = subprocess.run(["dnf", "repolist"], capture_output=True, text=True)
+    return repo_id in result.stdout
+
+def is_flathub_enabled():
+    result = subprocess.run(["flatpak", "remotes"], capture_output=True, text=True)
+    return "flathub" in result.stdout
+
 def enable_repos():
     version = get_fedora_version()
-    run(["dnf", "install", "-y", f"https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-{version}.noarch.rpm"])
-    run(["dnf", "install", "-y", f"https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{version}.noarch.rpm"])
-    run(["dnf", "install", "-y", "flatpak"])
-    run(["flatpak", "remote-add", "--if-not-exists", "flathub", "https://flathub.org/repo/flathub.flatpakrepo"])
 
+    # Habilitar RPM Fusion Free
+    if not is_repo_enabled("rpmfusion-free"):
+        run(["dnf", "install", "-y", f"https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-{version}.noarch.rpm"])
+    else:
+        print("🆗 Repositório rpmfusion-free já habilitado.")
+
+    # Habilitar RPM Fusion Non-Free
+    if not is_repo_enabled("rpmfusion-nonfree"):
+        run(["dnf", "install", "-y", f"https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{version}.noarch.rpm"])
+    else:
+        print("🆗 Repositório rpmfusion-nonfree já habilitado.")
+
+    # Habilitar Flathub
+    if not is_flathub_enabled():
+        run(["flatpak", "remote-add", "--if-not-exists", "flathub", "https://flathub.org/repo/flathub.flatpakrepo"])
+    else:
+        print("🆗 Flathub já está configurado.")
+        
 def install_rpm_packages():
     pacotes = [
         # 🧰 Terminal e utilitários
