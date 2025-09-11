@@ -47,6 +47,7 @@ def install_rpm_packages():
         # 🧰 Terminal e utilitários
         "zsh", "tmux", "git", "curl", "wget", "neovim", "vim-enhanced",
         "bat", "btop", "fd-find", "alacritty", "glances", "vagrant",
+        "lftp", "filezilla",
 
         # 🐍 DevOps / Desenvolvimento
         "python3-pip", "ansible", "podman", "maven",
