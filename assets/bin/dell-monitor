@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+model="${DELL_MONITOR_MODEL:-DELL S3423DWC}"
+
+usage() {
+  cat <<'EOF'
+Uso:
+  dell-monitor detect
+  dell-monitor capabilities
+  dell-monitor brightness <0-100>
+  dell-monitor contrast <0-100>
+  dell-monitor get-input
+  dell-monitor input <codigo-hex>
+
+O código VCP 0x60 seleciona a entrada. Descubra os valores anunciados pelo
+monitor com `dell-monitor capabilities`; USB-C pode usar valor específico do
+fabricante/firmware. Configure Auto Select for USB/KVM no OSD do monitor.
+EOF
+}
+
+select_monitor=(--model "$model")
+
+case "${1:-}" in
+  detect)
+    exec ddcutil detect
+    ;;
+  capabilities)
+    exec ddcutil "${select_monitor[@]}" capabilities
+    ;;
+  brightness|contrast)
+    [[ $# -eq 2 && "$2" =~ ^[0-9]+$ && "$2" -le 100 ]] || {
+      echo "Valor deve estar entre 0 e 100." >&2
+      exit 2
+    }
+    feature=10
+    [[ "$1" == "contrast" ]] && feature=12
+    exec ddcutil "${select_monitor[@]}" setvcp "$feature" "$2"
+    ;;
+  get-input)
+    exec ddcutil "${select_monitor[@]}" getvcp 60
+    ;;
+  input)
+    [[ $# -eq 2 && "$2" =~ ^(0x)?[0-9a-fA-F]{1,2}$ ]] || {
+      echo "Informe um código hexadecimal, por exemplo 0x11." >&2
+      exit 2
+    }
+    exec ddcutil "${select_monitor[@]}" setvcp 60 "$2"
+    ;;
+  *)
+    usage
+    exit 2
+    ;;
+esac

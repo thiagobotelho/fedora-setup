@@ -1,22 +1,29 @@
-# Ignorar arquivos e pastas temporárias
-*.log
-*.tar.gz
-*.bak
-*.swp
-
-# Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+*.log
+*.tmp
+*.bak
+*.bak-*
+*.swp
+*~
 .venv/
 .env
-
-# Arquivos de instalação gerados ou cache
-setup.cfg
+.env.*
+!.env.example
+.coverage
+coverage.xml
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+build/
+dist/
 *.egg-info/
-
-# Arquivos específicos ou acidentais
-readm.md
+*.tar.gz
+*.tar.xz
+*.tgz
+*.zip
+.idea/
+.vscode/
 .DS_Store
 Thumbs.db
