@@ -1,10 +1,9 @@
 # fedora-setup
 
-Bootstrap modular de workstation para **Fedora 44+**, **Ubuntu 26.04 LTS** e
-Debian atual, voltado a DevOps, infraestrutura, OpenShift e Kubernetes.
-
-O nome do projeto foi mantido por compatibilidade, mas o instalador detecta a
-distribuição e usa `dnf` ou `apt` conforme necessário.
+Automação modular para preparar workstations **Fedora 44+**, **Ubuntu 26.04
+LTS** e Debian para DevOps, infraestrutura, OpenShift e Kubernetes. O
+instalador oferece perfis prontos, módulos opcionais, detecção de ambiente e
+modo de simulação antes de alterar o sistema.
 
 ## Princípios
 
@@ -39,7 +38,17 @@ Módulos disponíveis:
 - `hashicorp`
 - `integrations`
 
-## Instalação
+## Requisitos
+
+- Fedora, Ubuntu ou Debian com acesso administrativo via `sudo`;
+- Python 3.10 ou mais recente;
+- Git e acesso à internet;
+- ambiente gráfico para os módulos desktop.
+
+Use `--dry-run` antes da primeira execução para conferir os comandos sem
+alterar o sistema.
+
+## Instalação e uso
 
 ```bash
 git clone https://github.com/thiagobotelho/fedora-setup.git
@@ -67,17 +76,13 @@ python3 install.py --modules nvidia --dry-run
 python3 install.py --modules hyperx --keyboard-layout us
 ```
 
-Para o hardware alvo deste projeto:
+Para instalar todos os módulos, primeiro simule o perfil completo:
 
 ```bash
-python3 install.py \
-  --profile full \
-  --hardware-profile precision-3591 \
-  --keyboard-layout us \
-  --dry-run
+python3 install.py --profile full --dry-run
 ```
 
-Depois de revisar a saída, remova `--dry-run`.
+Depois de revisar a saída, execute novamente sem `--dry-run`.
 
 Atualização completa do sistema é opcional:
 
@@ -136,10 +141,9 @@ menos que `--force-hardware` seja usado.
 - Ubuntu: `ubuntu-drivers install`, que escolhe o driver recomendado.
 - WSL: o driver deve ser instalado no host Windows; o módulo é ignorado.
 
-O Precision 3591 pode possuir RTX 500, RTX 1000 ou RTX 2000 Ada. O script não
-deduz a GPU pelo modelo do notebook: ele detecta o dispositivo PCI e deixa
-RPM Fusion ou `ubuntu-drivers` selecionar o pacote apropriado. Em notebooks
-híbridos, `switcheroo-control` é habilitado; valide após reiniciar:
+O script detecta a GPU pelo dispositivo PCI e deixa RPM Fusion ou
+`ubuntu-drivers` selecionar o pacote apropriado. Em notebooks híbridos,
+`switcheroo-control` é habilitado; valide após reiniciar:
 
 ```bash
 nvidia-smi
@@ -152,10 +156,7 @@ mostra o comando `mokutil --import`; o enrollment no menu MOK permanece
 necessariamente interativo. Sempre aguarde `modinfo -F version nvidia`
 responder antes do reboot.
 
-## Dell Precision 3591 e S3423DWC
-
-O perfil conhecido está em `hardware/profiles/precision-3591.json`: Precision
-3591/P127F, 64 GiB, Dell S3423DWC e HyperX Alloy FPS RGB.
+## Hardware Dell e monitores DDC/CI
 
 O módulo `dell` instala:
 
@@ -164,8 +165,7 @@ O módulo `dell` instala:
 - `power-profiles-daemon`, `thermald` e `switcheroo-control`;
 - `ddcutil` e I²C para controlar o monitor externo.
 
-O Dell Display Manager não possui versão Linux. O helper instalado oferece a
-parte suportada por DDC/CI:
+O helper `dell-monitor` oferece controle de monitores compatíveis com DDC/CI:
 
 ```bash
 dell-monitor detect
@@ -176,10 +176,10 @@ dell-monitor get-input
 dell-monitor input 0x11
 ```
 
-Não copie o código `0x11` sem conferir: descubra os valores do seu firmware em
-`dell-monitor capabilities`. Ative **DDC/CI** e **Auto Select for USB/KVM** no
-OSD do monitor. A troca de entrada por VCP `0x60` pode então acompanhar o KVM
-USB, conforme a configuração física USB-C/USB-B do monitor.
+Não copie o código `0x11` sem conferir: descubra os valores anunciados pelo
+monitor em `dell-monitor capabilities`. Ative **DDC/CI** no OSD. Quando houver
+mais de um monitor, defina `DELL_MONITOR_MODEL` com o nome exibido por
+`ddcutil detect`.
 
 Atualizações de firmware não são aplicadas automaticamente:
 
@@ -188,11 +188,10 @@ fwupdmgr get-devices
 fwupdmgr get-updates
 ```
 
-## HyperX e teclado americano
+## OpenRGB e layout de teclado
 
-O teclado exato é o HyperX Alloy FPS RGB `HX-KB1SS2-US`, identificado como
-USB `0951:16dc`, com suporte no OpenRGB. O módulo instala o pacote `openrgb`
-da distribuição e configura o layout somente quando solicitado.
+O módulo `hyperx` detecta dispositivos USB HyperX, instala o OpenRGB da
+distribuição e configura o layout somente quando solicitado.
 
 O HyperX NGENUITY é disponibilizado pelo fabricante somente para Windows. No
 Linux, OpenRGB é a alternativa para iluminação compatível; macros e firmware
@@ -253,23 +252,3 @@ python3 install.py --profile full --dry-run
 
 Consulte também [SUPPORT.md](SUPPORT.md), [CHANGELOG.md](CHANGELOG.md),
 [CONTRIBUTING.md](CONTRIBUTING.md) e [LICENSE](LICENSE).
-
-## Recomendações externas revisadas
-
-O projeto foi comparado com os guias Fedora 44 de
-[Hacking The Hike](https://www.hackingthehike.com/fedora-workstation-after-install-guide/),
-[TechHut](https://techhut.tv/fedora-44-post-install-guide) e
-[devangshekhawat](https://github.com/devangshekhawat/Fedora-44-Post-Install-Guide).
-Foram incorporados firmware/LVFS, RPM Fusion, codecs, OpenH264, VA-API,
-fontes, FUSE/AppImage, verificação dos repositórios RPM Fusion e fluxo Secure
-Boot/akmods.
-
-Não são automatizados:
-
-- `defaultyes=True`, `keepcache=True` e `fastestmirror=True`: podem aceitar
-  operações perigosas, consumir disco ou escolher espelho por latência em vez
-  de throughput;
-- scripts remotos executados com `curl | sh`;
-- desativação de NetworkManager/GNOME Software;
-- DNS, hostname, extensões GNOME e preferências visuais pessoais;
-- atualização automática de firmware ou reboot.

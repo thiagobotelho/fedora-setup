@@ -85,8 +85,7 @@ class Facts:
     hyperx: bool
     hyperx_usb_ids: tuple[str, ...]
     monitor_models: tuple[str, ...]
-    dell_precision_3591: bool
-    dell_s3423dwc: bool
+    dell_hardware: bool
     desktop: bool
     secure_boot: str
 
@@ -152,8 +151,6 @@ def detect() -> Facts:
         or _read_text(Path("/sys/class/dmi/id/product_version"))
     )
     monitors = _monitor_models()
-    model_normalized = computer_model.lower()
-
     return Facts(
         distro=distro,
         version=release.get("VERSION_ID", ""),
@@ -169,8 +166,10 @@ def detect() -> Facts:
         hyperx=bool(hyperx_ids),
         hyperx_usb_ids=tuple(sorted(set(hyperx_ids))),
         monitor_models=monitors,
-        dell_precision_3591="precision 3591" in model_normalized or "p127f" in model_normalized,
-        dell_s3423dwc=any("s3423dwc" in model.lower() for model in monitors),
+        dell_hardware=(
+            "dell" in computer_vendor.lower()
+            or any("dell" in model.lower() for model in monitors)
+        ),
         desktop=bool(os.environ.get("XDG_CURRENT_DESKTOP") or os.environ.get("DESKTOP_SESSION")),
         secure_boot=secure_boot,
     )

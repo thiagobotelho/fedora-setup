@@ -9,8 +9,8 @@
 - Detecção de NVIDIA, HyperX, Secure Boot e memória.
 - Integração com terminal-config e openshift-cli-installer.
 - OpenRGB, KVM/libvirt e repositório HashiCorp opcionais.
-- Perfil Precision 3591/P127F e inventário conhecido de periféricos.
-- Módulo Dell com fwupd, Thunderbolt, DDC/CI e helper para S3423DWC.
+- Detecção genérica de hardware Dell e dispositivos HyperX.
+- Módulo Dell com fwupd, Thunderbolt, DDC/CI e helper de monitor.
 - Suporte NVIDIA híbrido com switcheroo-control.
 - Firmware/LVFS para qualquer workstation.
 - Módulo multimídia com RPM Fusion, FFmpeg, VA-API, fontes e AppImage.

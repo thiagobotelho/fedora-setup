@@ -29,7 +29,7 @@ def facts(**overrides):
         "codename": "",
         "pretty_name": "Fedora Linux 44",
         "computer_vendor": "Dell Inc.",
-        "computer_model": "Precision 3591",
+        "computer_model": "Workstation",
         "architecture": "x86_64",
         "wsl": False,
         "memory_gib": 32.0,
@@ -38,8 +38,7 @@ def facts(**overrides):
         "hyperx": False,
         "hyperx_usb_ids": (),
         "monitor_models": (),
-        "dell_precision_3591": True,
-        "dell_s3423dwc": False,
+        "dell_hardware": True,
         "desktop": True,
         "secure_boot": "disabled",
     }
@@ -114,7 +113,7 @@ class SetupTests(unittest.TestCase):
         self.assertEqual(ctx.runner.commands, [])
 
     def test_us_international_layout_translation(self):
-        ctx = self.context(facts(hyperx=True, hyperx_usb_ids=("0951:16dc",)))
+        ctx = self.context(facts(hyperx=True, hyperx_usb_ids=("0951:abcd",)))
         hyperx.install(ctx, keyboard_layout="us-intl")
         self.assertIn(
             ["localectl", "set-x11-keymap", "us", "", "intl"],
@@ -124,11 +123,11 @@ class SetupTests(unittest.TestCase):
     def test_edid_model_descriptor(self):
         data = bytearray(128)
         data[54:59] = b"\x00\x00\x00\xfc\x00"
-        data[59:72] = b"S3423DWC\n    "
-        self.assertEqual(_edid_model(bytes(data)), "S3423DWC")
+        data[59:72] = b"Display One\n  "
+        self.assertEqual(_edid_model(bytes(data)), "Display One")
 
-    def test_dell_profile_installs_monitor_helper(self):
-        ctx = self.context(facts(dell_s3423dwc=True))
+    def test_dell_module_installs_monitor_helper(self):
+        ctx = self.context(facts(dell_hardware=True))
         dell.install(ctx)
         flattened = [" ".join(command) for command in ctx.runner.commands]
         self.assertTrue(any("ddcutil" in command for command in flattened))

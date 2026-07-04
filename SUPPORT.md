@@ -8,12 +8,12 @@
 | Fedora/Ubuntu em WSL 2 | suportada sem módulos desktop/hardware |
 | Linux `x86_64` | suportado |
 | Linux `aarch64` | melhor esforço, conforme pacotes externos |
-| Dell Precision 3591/P127F | perfil de hardware suportado |
-| Dell S3423DWC | DDC/CI e KVM físico; sem Dell Display Manager |
-| HyperX Alloy FPS RGB `0951:16dc` | iluminação via OpenRGB |
+| Hardware Dell | firmware e periféricos conforme suporte do LVFS/Linux |
+| Monitores DDC/CI | controle conforme recursos anunciados pelo monitor |
+| Dispositivos HyperX | iluminação conforme suporte do OpenRGB |
 
 Drivers NVIDIA dependem do modelo da GPU, kernel, Secure Boot e disponibilidade
 nos repositórios da distribuição.
 
-O Dell Display Manager/NGENUITY não possui suporte oficial Linux. Recursos
-equivalentes são limitados ao que `ddcutil`, OpenRGB e o hardware expõem.
+Recursos de utilitários proprietários dependem do fabricante. As alternativas
+Linux são limitadas ao que `ddcutil`, OpenRGB e o próprio hardware expõem.

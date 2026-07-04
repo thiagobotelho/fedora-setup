@@ -29,7 +29,6 @@ def parser() -> argparse.ArgumentParser:
     command.add_argument("--upgrade", action="store_true", help="atualiza todo o sistema antes da instalação")
     command.add_argument("--force-hardware", action="store_true", help="força módulos de hardware/virtualização")
     command.add_argument("--keyboard-layout", choices=("us", "us-intl", "br"))
-    command.add_argument("--hardware-profile", choices=("auto", "precision-3591"), default="auto")
     command.add_argument("--terminal-config", action=argparse.BooleanOptionalAction, default=None)
     command.add_argument("--openshift-cli", action=argparse.BooleanOptionalAction, default=None)
     command.add_argument("--show-hardware", action="store_true")
@@ -99,7 +98,6 @@ def main(argv: list[str] | None = None) -> None:
             upgrade=args.upgrade,
             force=args.force_hardware,
             keyboard_layout=args.keyboard_layout,
-            hardware_profile=args.hardware_profile,
             terminal_config=terminal,
             openshift_cli=openshift,
         )

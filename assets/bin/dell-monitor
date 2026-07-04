@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-model="${DELL_MONITOR_MODEL:-DELL S3423DWC}"
+model="${DELL_MONITOR_MODEL:-}"
 
 usage() {
   cat <<'EOF'
@@ -19,7 +19,8 @@ fabricante/firmware. Configure Auto Select for USB/KVM no OSD do monitor.
 EOF
 }
 
-select_monitor=(--model "$model")
+select_monitor=()
+[[ -n "$model" ]] && select_monitor=(--model "$model")
 
 case "${1:-}" in
   detect)

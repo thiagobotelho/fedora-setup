@@ -23,23 +23,17 @@ def install(
     ctx: Context,
     *,
     force: bool = False,
-    hardware_profile: str = "auto",
     **_: object,
 ) -> None:
     if ctx.facts.wsl:
         print("🪟 WSL detectado: monitor/firmware devem ser gerenciados pelo host Windows")
         return
 
-    expected = (
-        ctx.facts.dell_precision_3591
-        or ctx.facts.dell_s3423dwc
-        or hardware_profile == "precision-3591"
-    )
-    if not expected and not force:
-        print("ℹ️ Hardware Dell alvo não detectado; módulo ignorado")
+    if not ctx.facts.dell_hardware and not force:
+        print("ℹ️ Hardware Dell não detectado; módulo ignorado")
         return
 
-    print("🖥️ Módulo Dell Precision/S3423DWC")
+    print("🖥️ Módulo de hardware Dell/DDC-CI")
     ctx.packages(
         fedora=PACKAGES["fedora"],
         ubuntu=PACKAGES["ubuntu"],
@@ -72,5 +66,5 @@ def install(
     ctx.runner.run(["fwupdmgr", "refresh", "--force"], check=False)
     ctx.runner.run(["fwupdmgr", "get-updates"], check=False)
 
-    print("ℹ️ Ative DDC/CI e Auto Select for USB no OSD do S3423DWC.")
+    print("ℹ️ Ative DDC/CI no OSD do monitor antes de usar o helper.")
     print("ℹ️ Após logout/login: dell-monitor detect; dell-monitor capabilities")
