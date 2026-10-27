@@ -20,3 +20,14 @@ jobs:
       - run: python install.py --profile minimal --dry-run
       - run: python install.py --profile full --force-hardware --dry-run
       - run: bash -n assets/bin/dell-monitor
+
+  testar-fedora:
+    runs-on: ubuntu-24.04
+    container: fedora:44
+    timeout-minutes: 15
+    steps:
+      - name: Preparar ferramentas do container
+        run: dnf install -y git python3 zsh
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+      - name: Executar testes sem instalar no host
+        run: python3 -m unittest discover -s tests -v
