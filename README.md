@@ -252,3 +252,7 @@ python3 install.py --profile full --dry-run
 
 Consulte também [SUPPORT.md](SUPPORT.md), [CHANGELOG.md](CHANGELOG.md),
 [CONTRIBUTING.md](CONTRIBUTING.md) e [LICENSE](LICENSE).
+
+## Aprender a configuração
+
+Consulte o [guia comentado](docs/APRENDIZADO.md) para entender componentes, escolhas, testes positivos/negativos e reversão.
